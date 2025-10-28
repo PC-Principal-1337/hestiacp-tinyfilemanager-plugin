@@ -1,0 +1,30 @@
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Backup files
+*.backup
+*.bak
+*.backup[0-9]
+
+# Config files (should use template)
+src/config.php
+
+# Test files
+test/
+*.test.php
+
+# Temporary files
+tmp/
+temp/
+*.tmp

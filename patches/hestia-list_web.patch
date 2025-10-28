@@ -1,0 +1,13 @@
+--- a/web/templates/pages/list_web.php
++++ b/web/templates/pages/list_web.php
+@@ -276,8 +276,8 @@
+ 									<li class="units-table-row-action" data-key-action="href">
+ 										<a
+ 											class="units-table-row-action-link"
+-											href="/filemanager/?p=/web/<?= $key ?>/public_html"
+-											target="_blank"
++											href="/filemanager/?p=<?= $key ?>/public_html"
++											target="_self"
+ 											rel="noopener"
+ 											title="<?= _("File manager") ?>"
+ 										>

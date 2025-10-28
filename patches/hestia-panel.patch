@@ -1,0 +1,5 @@
+--- a/web/templates/includes/panel.php
++++ b/web/templates/includes/panel.php
+@@ -1,1 +1,1 @@
+-} ?>" href="/fm/">
++} ?>" href="/filemanager/?p=">

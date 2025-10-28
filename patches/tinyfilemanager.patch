@@ -1,0 +1,49 @@
+--- /tmp/tinyfilemanager-master/tinyfilemanager.php	2025-10-13 03:39:05.000000000 +0000
++++ /usr/local/hestia/web/filemanager/tinyfilemanager.php	2025-10-28 02:52:16.369172693 +0000
+@@ -1730,6 +1730,26 @@
+     $file_url = FM_ROOT_URL . fm_convert_win((FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $file);
+     $file_path = $path . '/' . $file;
+ 
++    // Hestia-specific: Check if file is in public directory and generate correct URL
++    $show_open_button = false;
++    $public_file_url = '';
++    
++    // Define known public directories
++    $public_dirs = ['public_html', 'public_shtml', 'httpdocs', 'www'];
++    
++    // Check if file is in any public directory
++    // Pattern: /home/USER/web/DOMAIN/(public_html|public_shtml|httpdocs|www)/PATH
++    $pattern = '#/web/([^/]+)/(' . implode('|', $public_dirs) . ')/(.*)$#';
++    
++    if (preg_match($pattern, $file_path, $matches)) {
++        $show_open_button = true;
++        $domain = $matches[1];
++        $public_dir = $matches[2];
++        $rel_path = $matches[3];
++        // Build URL with https
++        $public_file_url = 'https://' . $domain . '/' . $rel_path;
++    }
++
+     $ext = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
+     $mime_type = fm_get_mime_type($file_path);
+     $filesize_raw = fm_get_size($file_path);
+@@ -1823,7 +1843,9 @@
+                 <?php if (!FM_READONLY): ?>
+                     <a class="fw-bold btn btn-outline-primary" title="<?php echo lng('Delete') ?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;del=<?php echo urlencode($file) ?>" onclick="confirmDailog(event, 1209, '<?php echo lng('Delete') . ' ' . lng('File'); ?>','<?php echo urlencode($file); ?>', this.href);"> <i class="fa fa-trash"></i> Delete</a>
+                 <?php endif; ?>
+-                <a class="fw-bold btn btn-outline-primary" href="<?php echo fm_enc($file_url) ?>" target="_blank"><i class="fa fa-external-link-square"></i> <?php echo lng('Open') ?></a></b>
++                <?php if ($show_open_button): ?>
++                <a class="fw-bold btn btn-outline-primary" href="<?php echo fm_enc($public_file_url) ?>" target="_blank"><i class="fa fa-external-link-square"></i> <?php echo lng('Open') ?></a>
++                <?php endif; ?>
+                 <?php
+                 // ZIP actions
+                 if (!FM_READONLY && ($is_zip || $is_gzip) && $filenames !== false) {
+@@ -3715,7 +3737,7 @@
+     $isStickyNavBar = $sticky_navbar ? 'fixed-top' : '';
+ ?>
+     <nav class="navbar navbar-expand-lg mb-4 main-nav <?php echo $isStickyNavBar ?> bg-body-tertiary" data-bs-theme="<?php echo FM_THEME; ?>">
+-        <a class="navbar-brand"> <?php echo lng('AppTitle') ?> </a>
++        <a class="navbar-brand" href="/list/web/"> hestia </a>
+         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+             <span class="navbar-toggler-icon"></span>
+         </button>
